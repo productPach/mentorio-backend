@@ -1,12 +1,24 @@
 const OpenAI = require("openai");
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+const deepseek = new OpenAI({
+  apiKey: process.env.DEEPSEEK_API_KEY,
+  baseURL: "https://api.deepseek.com/v1",
+});
 
 async function getChatCompletion(message) {
-  const completion = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
-    messages: [{ role: "user", content: message }],
-  });
-  return completion.choices[0].message.content;
+  try {
+    const completion = await deepseek.chat.completions.create({
+      model: "deepseek-chat",
+      messages: [{ role: "user", content: message }],
+      temperature: 0.7,
+      max_tokens: 1024,
+    });
+
+    return completion.choices[0].message.content;
+  } catch (error) {
+    console.error("DeepSeek API Error:", error);
+    return "⚠️ Произошла ошибка при обработке запроса";
+  }
 }
 
 module.exports = { getChatCompletion };
