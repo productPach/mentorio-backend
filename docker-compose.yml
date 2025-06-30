@@ -38,4 +38,4 @@ services:
     - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: mentorioAdmin
-      MONGO_INITDB_ROOT_PASSWORD: sm9_KJhn&muih8706*8?09umjil
+      MONGO_INITDB_ROOT_PASSWORD: sm9_KJhnmuih8706809umjil
