@@ -23,25 +23,22 @@ const SYSTEM_PROMPT = `
 🎯 Цель — поддержать, помочь разобраться, быть рядом.
 `;
 
-async function getChatCompletion(userMessage) {
+async function getChatCompletion(history) {
   try {
+    // Добавляем системный промпт в начало истории
+    const messages = [
+      { role: "system", content: SYSTEM_PROMPT }, // добавляется здесь
+      ...history, // оптимизированная история
+    ];
+
     const completion = await deepseek.chat.completions.create({
       model: "deepseek-chat",
-      messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        { role: "user", content: userMessage },
-      ],
+      messages: messages,
       temperature: 0.7,
       max_tokens: 512,
     });
 
     const reply = completion.choices[0].message.content;
-
-    // Примитивная фильтрация нежелательных ссылок
-    // if (/https?:\/\/|betterhelp|talkspace|calmerry|7cups/i.test(reply)) {
-    //   return "⚠️ Я здесь, чтобы поддержать тебя лично. Давай поговорим, не прибегая к внешним сервисам.";
-    // }
-
     return reply;
   } catch (error) {
     console.error("DeepSeek API Error:", error);
