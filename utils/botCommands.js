@@ -6,6 +6,7 @@ const MAX_FREE_MESSAGES = 3;
 
 async function setupBot(bot) {
   bot.telegram.setMyCommands([
+    { command: "start", description: "Старт" },
     { command: "buy", description: "Купить подписку" },
     { command: "restart", description: "Перезапуск" },
     { command: "reset", description: "Забыть переписку" },
@@ -86,6 +87,7 @@ async function setupBot(bot) {
 
       if (!user.firstMessageAt) {
         user.firstMessageAt = now;
+        user.messagesCount = 0;
       } else {
         const diff = now - user.firstMessageAt;
         if (diff >= 7 * 24 * 60 * 60 * 1000) {
@@ -94,7 +96,9 @@ async function setupBot(bot) {
         }
       }
 
-      if (user.messagesCount >= MAX_FREE_MESSAGES) {
+      user.messagesCount++;
+
+      if (user.messagesCount > MAX_FREE_MESSAGES) {
         await user.save();
         return ctx.reply(
           "🚫 Лимит бесплатных сообщений исчерпан. Оплатите доступ: https://mentorio.pro/pay/" +
@@ -103,7 +107,6 @@ async function setupBot(bot) {
       }
     }
 
-    user.messagesCount++;
     await user.save();
 
     try {

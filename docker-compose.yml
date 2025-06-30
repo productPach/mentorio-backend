@@ -34,3 +34,8 @@ services:
     restart: unless-stopped
     volumes:
       - ./mongo-data:/data/db
+    ports:
+    - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mentorioAdmin
+      MONGO_INITDB_ROOT_PASSWORD: sm9_KJhn&muih8706*8?09umjil
